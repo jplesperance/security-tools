@@ -4,10 +4,15 @@ import (
 	"io"
 	"log"
 	"os"
+	"flag"
 )
 
+var device = flag.String("device", "", "the device to read the boot sector of")
+// go run main.go --device /dev/sda
 func main() {
-	path := "/dev/sda"
+	flag.Parse()
+	log.Println(*device)
+	path := *device
 	log.Println("[+] Reading boot sector of " + path)
 
 	file, err := os.Open(path)
