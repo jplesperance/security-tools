@@ -25,7 +25,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for _, hostnames := range hostnames {
+	for _, hostname := range hostnames {
 		fmt.Println(hostname)
 	}
 }

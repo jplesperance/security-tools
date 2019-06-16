@@ -12,7 +12,11 @@ var (
 )
 
 func main() {
-	fileInfo, err = os.Stat("test.txt")
+	if len(os.Args) != 2 {
+		log.Fatal("No file provided")
+	}
+	file := os.Args[1]
+	fileInfo, err = os.Stat(file)
 	if err != nil {
 		log.Fatal(err)
 	}
