@@ -12,8 +12,7 @@ Typical Usage Examples:
 
 Options:
 
-
-    **wordlist**
+    wordlist -- Usage: zipbrute.py [OPTIONS]
 
         -c abc, --chars=abc                      the charset to use for wordlist generation
 
@@ -22,3 +21,9 @@ Options:
         -l 8, --length 6:8                       length(s) of the words in the wordlist to generate, ex. 8 for static or 6:8 for range
 
         -o file, --outfile file                  the file name output the wordlist to
+    
+    brute  -- Usage: zipbrute.py brute [OPTIONS] [FILE]
+       
+        -p password, --password=password            Password for encrypted file
+        
+        -w wordlist.txt, --wordlist=wordlist.txt    Wordlist to use for bruteforcing encrypted zip file
