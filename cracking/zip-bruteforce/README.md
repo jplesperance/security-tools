@@ -12,7 +12,7 @@ Typical Usage Examples:
 
 Options:
 
-    wordlist -- Usage: zipbrute.py [OPTIONS]
+    wordlist -- Usage: zipbrute.py wordlist [OPTIONS]
 
         -c abc, --chars=abc                      the charset to use for wordlist generation
 
