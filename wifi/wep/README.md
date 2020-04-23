@@ -6,7 +6,7 @@ Running the tool:
 
 Typical Usage Examples:
 
-    ./zipbrute.py -w wordlist.txt wep.pcap
+    ./autowep.py -w wordlist.txt wep.pcap
 
 Options:
 
