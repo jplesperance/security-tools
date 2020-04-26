@@ -16,7 +16,7 @@ class Parse(object):
     channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 36, 40, 44, 149, 153, 157, 161, 165]
     clientprobes = set()
     length = 300
-    known = False
+    known = True
     hidden = False
     probes = 'none'
     discover_hidden = False
@@ -26,8 +26,8 @@ class Parse(object):
     def __init__(self, length, known, hidden, probes, discover_hidden, write, interface):
         print(length, known, hidden, probes, discover_hidden, write, interface)
         self.length = length
-        if known:
-            self.known = known
+        if not known:
+            self.known = False
         if hidden:
             self.hidden = hidden
         if discover_hidden:
@@ -41,20 +41,21 @@ class Parse(object):
 
     def PacketHandler(self, packet):
         if packet.haslayer(dot11.Dot11Beacon):
-            if packet.haslayer(dot11.Dot11Elt) and packet.getlayer(dot11.Dot11FCS).addr2:
-                ssid = packet.getlayer(dot11.Dot11Elt).info
-                if self.hidden:
-                    if ssid.decode() == '':
-                        if packet.addr2 not in self.hidden_bssids:
-                            self.hidden_bssids.append(packet.getlayer(dot11.Dot11FCS).addr3)
+            if packet.haslayer(dot11.Dot11Elt) and packet.haslayer(dot11.Dot11FCS):
+                if packet.getlayer(dot11.Dot11FCS).addr3:
+                    ssid = packet.getlayer(dot11.Dot11Elt).info
+                    if self.hidden:
+                        if ssid.decode() == '':
+                            if packet.addr2 not in self.hidden_bssids:
+                                self.hidden_bssids.append(packet.getlayer(dot11.Dot11FCS).addr3)
 
-                if self.known:
-                    if ssid.decode() != '' or packet.getlayer(dot11.Dot11Elt).ID == 'SSID':
-                        if ssid.decode() not in self.known_bssids.keys():
-                            self.known_bssids[ssid.decode()] = packet.getlayer(dot11.Dot11FCS).addr3
+                    if self.known:
+                        if ssid.decode() != '' or packet.getlayer(dot11.Dot11Elt).ID == 'SSID':
+                            if ssid.decode() not in self.known_bssids.keys():
+                                self.known_bssids[ssid.decode()] = packet.getlayer(dot11.Dot11FCS).addr3
         if self.discover_hidden:
             if packet.haslayer(dot11.Dot11ProbeResp):
-                self.probesResp[packet.addr2] = packet.info.decode()
+                self.probesResp[packet.addr2] = packet.info
         if self.probes == 'all' or self.probes == 'unknown':
             if packet.haslayer(dot11.Dot11AssoReq):
                 if len(packet.info) > 0:

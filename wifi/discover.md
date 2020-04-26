@@ -1,14 +1,56 @@
 ## Usage ##
 
-Running the tool:
+This tool is designed to monitor wireless network traffic.  Various arguments can be passed to the tool to customize what type of data it captures.
+
+### Running the tool:
     
-    ./autowep.py [options] PCAPFILE
+While there are several different arguments that can be used with `discover`, requires at least one of the following arguments to be provided: -k -h -p -d
+    
+    ./discover.py -k
 
-Typical Usage Examples:
+### Typical Usage Examples:
 
-    ./autowep.py -w wordlist.txt wep.pcap
+Capture only broadcasted SSIDs
 
-Options:
+    ./discover -k
+    
+Capture only hidden networks
+    
+    ./discover -h
+    
+Capture the SSID for hidden networks
 
-    -w wordlist, --wordlist=wordlist.txt        The wordlist to use for brute forcing the WEP key
+    ./discover -d
+    
+Capture broadcasted and hidden networks.  Use association responses to find the SSID for hidden networks
+
+    ./discover -k -h -d
+
+### Options
+
+Find and log broadcasted networks
+
+    -k, --known
+    
+Find and log hidden networks
+
+    -h, --hidden
+
+Log Client Probes(none, all probes, probes for unknown networks) for SSIDs
+
+    -p, --probes [none|unknown|all] - default to none
+    
+Find and log SSIDs for hidden networks using association response packets
+
+    -d, --discover-hidden
+    
+Define the interface to use, must be in monitor mode
+
+    -i, --interface <iface>
+Define what to prepend the output filenames with
+    
+    -w, --write <file>
+How long to run the scan
+
+    -t, --time <int>
        
