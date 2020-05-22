@@ -1,6 +1,6 @@
 # security-tools
 
-A collection of scripts and tools that I use for Information Security related activities
+A collection of scripts and tools that I use for Information Security related activities.
 
 ## Tools
 
