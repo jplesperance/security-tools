@@ -1,0 +1,5 @@
+# Nmap 7.93 scan initiated Thu Feb  9 18:22:41 2023 as: nmap -sV --script smb-vuln* -T4 -Pn -n -p 135,139,445,3389,49152,49153,49154,49158,49159 -v -oA blue -O 10.10.119.173
+# Ports scanned: TCP(9;135,139,445,3389,49152-49154,49158-49159) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+Host: 10.10.119.173 ()	Status: Up
+Host: 10.10.119.173 ()	Ports: 135/open/tcp//msrpc//Microsoft Windows RPC/, 139/open/tcp//netbios-ssn//Microsoft Windows netbios-ssn/, 445/open/tcp//microsoft-ds//Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)/, 3389/open/tcp//ms-wbt-server?///, 49152/open/tcp//msrpc//Microsoft Windows RPC/, 49153/open/tcp//msrpc//Microsoft Windows RPC/, 49154/open/tcp//msrpc//Microsoft Windows RPC/, 49158/open/tcp//msrpc//Microsoft Windows RPC/, 49159/open/tcp//msrpc//Microsoft Windows RPC/	Seq Index: 260	IP ID Seq: Incremental
+# Nmap done at Thu Feb  9 18:24:48 2023 -- 1 IP address (1 host up) scanned in 127.13 seconds
