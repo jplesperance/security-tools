@@ -4,9 +4,9 @@ import (
 	"crypto/sha512"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net"
+	"os"
 	"os/exec"
 
 	"github.com/creack/pty"
@@ -34,7 +34,7 @@ func main() {
 	flaggy.Parse()
 
 	log.SetPrefix("SSH - ")
-	privKeyBytes, err := ioutil.ReadFile(keyPath)
+	privKeyBytes, err := os.ReadFile(keyPath)
 	if err != nil {
 		log.Panicln("Error reading privkey:\t", err.Error())
 	}
@@ -70,7 +70,11 @@ func sshHandler(s ssh.Session) {
 	}
 	term := terminal.NewTerminal(s, "$ ")
 	for {
-		command, _ = term.ReadLine()
+		command, err = term.ReadLine()
+		if err != nil {
+			log.Println(err)
+			return
+		}
 		if command == "exit" {
 			return
 		}
@@ -85,26 +89,42 @@ func sshterminal(s ssh.Session) {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("TERM=%s", ptyReq.Term))
 		f, err := pty.Start(cmd)
 		if err != nil {
-			panic(err)
+			log.Println("Error starting PTY:\t", err.Error())
+			return
 		}
 		go func() {
-			io.Copy(f, s) // stdin
+			_, err := io.Copy(f, s)
+			if err != nil {
+				log.Println("Error copying data to PTY:\t", err.Error())
+				return
+			}
 		}()
-		io.Copy(s, f) // stdout
-		cmd.Wait()
+		_, err = io.Copy(s, f) // stdout
+		if err != nil {
+			log.Println("Error copying data from PTY:\t", err.Error())
+		}
+		err = cmd.Wait()
+		if err != nil {
+			log.Println("Error waiting for the commands to finish:\t", err.Error())
+		}
 	} else {
-		io.WriteString(s, "No PTY requested.\n")
+		_, err := io.WriteString(s, "No PTY requested.\n")
+		if err != nil {
+			log.Println("Error writing to the session:\t", err.Error())
+		}
 		s.Exit(1)
 	}
 }
 
 func runCommand(cmd string) []byte {
 	result := exec.Command("/bin/bash", "-c", cmd)
-	response, _ := result.CombinedOutput()
+	response, err := result.CombinedOutput()
+	if err != nil {
+		log.Println("Error running commnad:\t", err.Error())
+	}
 	return response
 }
 
 func passwordHandler(_ ssh.Context, password string) bool {
 	return verifyPass(hash, "1c362db832f3f864c8c2fe05f2002a05", password)
 }
-
